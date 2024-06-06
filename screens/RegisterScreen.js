@@ -4,25 +4,39 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios'; 
 
 function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [name , setName] = useState("");
   const navigation = useNavigation();
 
   const handleRegister = async () => {
-    if (email.trim() === "" || password.trim() === "") {
+    if (email.trim() === "" || password.trim() === ""|| phone.trim() === ""|| name.trim() === ""  ){
       Alert.alert("Please enter email and password.");
       return;
     }
+    
+    const response = await axios.post('http://localhost:8080/api/v1/signup', {
+        email: email,
+        phone: phone,
+        name: name,
+        password: password
+      });
+
 
     await AsyncStorage.setItem('user_email', email);
     await AsyncStorage.setItem('user_password', password);
+    await AsyncStorage.setItem('token', response.data.token);
 
-    Alert.alert(`Registered with Email: ${email} and Password: ${password}`);
+    Alert.alert(`Registered with Email: ${email}`);
 
     setEmail("");
     setPassword("");
+    setPhone("");
+    setName("");
 
     navigation.reset({
       index: 0,
@@ -39,6 +53,22 @@ function RegisterScreen() {
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
+        />
+      </View>
+      <View style={styles.formGroup}>
+        <TextInput
+          style={styles.input}
+          placeholder="Name"
+          value={name}
+          onChangeText={(text) => setName(text)}
+        />
+      </View>
+      <View style={styles.formGroup}>
+        <TextInput
+          style={styles.input}
+          placeholder="Phone"
+          value={phone}
+          onChangeText={(text) => setPhone(text)}
         />
       </View>
       <View style={styles.formGroup}>
@@ -94,6 +124,3 @@ const styles = {
 };
 
 export default RegisterScreen;
-
-
-
