@@ -19,7 +19,7 @@ function RegisterScreen() {
       return;
     }
     
-    const response = await axios.post('http://localhost:8080/api/v1/signup', {
+    const response = await axios.post('http://localhost:8080/api/v1/'+'signup', {
         email: email,
         phone: phone,
         name: name,
@@ -28,7 +28,6 @@ function RegisterScreen() {
 
 
     await AsyncStorage.setItem('user_email', email);
-    await AsyncStorage.setItem('user_password', password);
     await AsyncStorage.setItem('token', response.data.token);
 
     Alert.alert(`Registered with Email: ${email}`);

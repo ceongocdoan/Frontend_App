@@ -1,25 +1,40 @@
-//account
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
-function AccountScreen() {
+const AccountScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigation = useNavigation();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    const storedEmail = await AsyncStorage.getItem('user_email');
-    const storedPassword = await AsyncStorage.getItem('user_password');
+    if (email.trim() === "" || password.trim() === ""){
+      Alert.alert("Please enter email and password.");
+      return;
+    }
+    
+    try {
+      const response = await axios.post('http://localhost:8080/api/v1/'+`login`, {
+        email: email,
+        password: password
+      });
 
-    if (email === storedEmail && password === storedPassword) {
-      Alert.alert("Login successful!");
-      navigation.navigate("Home");
+      await AsyncStorage.setItem('user_email', email);
+      await AsyncStorage.setItem('token', response.data.token);
+
+      Alert.alert(`Login with Email: ${email}`);
+  
       setEmail("");
       setPassword("");
-    } else {
-      Alert.alert("Invalid email or password!");
+  
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+    } catch (error) {
+      Alert.alert("Login failed. Please try again.");
     }
   };
 
@@ -123,4 +138,3 @@ const styles = {
 };
 
 export default AccountScreen;
-
