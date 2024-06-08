@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen';
 import AccountScreen from './screens/AccountScreen';
+import ProfileScreen from './screens/ProfileScreen';
 import BrandScreen from './screens/BrandScreen';
 import BookingScreen from './screens/BookingScreen';
 import BookingInfoScreen from './screens/BookingInfoScreen';
@@ -27,6 +28,8 @@ const HomeStack = () => (
     <Stack.Screen name="Call" component={Call} options={{ headerShown: true, headerBackTitleVisible: false, headerBackTitle: 'Back' }} />
     <Stack.Screen name="Shopping" component={Shopping} options={{ headerShown: true, headerBackTitleVisible: false, headerBackTitle: 'Back' }} />
     <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: true }} /> 
+    <Stack.Screen name="Profile" component={ProfileScreen} options={{ heheaderShown: true }} /> 
+    <Stack.Screen name="Account" component={AccountScreen} options={{ heheaderShown: true }} /> 
   </Stack.Navigator>
 );
 
@@ -71,8 +74,8 @@ const App = () => {
             }}
           />
           <BottomTab.Screen
-            name="Account"
-            component={AccountScreen}
+            name="Profile"
+            component={ProfileScreen}
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
