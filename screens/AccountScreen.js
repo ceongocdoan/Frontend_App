@@ -1,87 +1,121 @@
-//account
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert, Pressable } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function AccountScreen() {
-  const navigation = useNavigation();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false); 
 
-  const handleLogin = async () => {
-    const storedEmail = await AsyncStorage.getItem('user_email');
-    const storedPassword = await AsyncStorage.getItem('user_password');
+  useEffect(() => {
+    checkLoggedIn();
+  }, []);
 
-    if (email === storedEmail && password === storedPassword) {
-      Alert.alert("Login successful!");
-      navigation.navigate("Home");
-      setEmail("");
-      setPassword("");
-    } else {
-      Alert.alert("Invalid email or password!");
+  const checkLoggedIn = async () => {
+    const userToken = await AsyncStorage.getItem('userToken');
+    if (userToken) {
+      setLoggedIn(true);
+      const storedEmail = await AsyncStorage.getItem('userEmail');
+      setEmail(storedEmail);
     }
   };
 
-  const navigateToRegister = () => {
-    navigation.navigate("Register");
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:3002/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: 'Default User', email }),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        await AsyncStorage.setItem('userToken', data.token);
+        await AsyncStorage.setItem('userEmail', email);
+        setLoggedIn(true); 
+        Alert.alert("Login successful!");
+      } else {
+        Alert.alert("Invalid email or password!");
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      Alert.alert("An error occurred. Please try again.");
+    }
   };
 
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userEmail');
+      setLoggedIn(false); 
+      setEmail("");
+      Alert.alert("Logged out successfully!");
+    } catch (error) {
+      console.error('Error logging out:', error);
+      Alert.alert("An error occurred. Please try again.");
+    }
+  };
+
+
   return (
-    <View>
+    <View style={styles.account}>
       <View style={styles.loginBox}>
         <View style={styles.lbHeader}>
-          <Text style={styles.linkText}>LOGIN</Text>
-          <TouchableOpacity onPress={navigateToRegister}>
-            <Text style={styles.linkText}>SIGN UP</Text>
-          </TouchableOpacity>
+          <Text style={styles.linkText}>Đăng nhập tài khoản</Text>
         </View>
 
-        <View style={styles.emailLogin}>
-          <View style={styles.uFormGroup}>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-            />
+        {loggedIn ? ( 
+          <View style={styles.loggedInContainer}>
+            <Text style={styles.loggedInText}>Xin chào, {email}!</Text>
+            <Pressable style={styles.logoutButton} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Đăng xuất khỏi tài khoản này</Text>
+            </Pressable>
           </View>
-          <View style={styles.uFormGroup}>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry={true}
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-            />
+        ) : (
+          <View style={styles.emailLogin}>
+            <View style={styles.uFormGroup}>
+              <TextInput
+                style={styles.input}
+                placeholder="Tên..."
+                value={name}
+                onChangeText={(text) => setName(text)}
+              />
+            </View>
+
+            <View style={styles.uFormGroup}>
+              <TextInput
+                style={styles.input}
+                placeholder="Email..."
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+              />
+            </View>
+
+            <View style={styles.uFormGroup}>
+              <Pressable style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Đăng nhập</Text>
+              </Pressable>
+            </View>
           </View>
-          <View style={styles.uFormGroup}>
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-              <Text style={styles.buttonText}>Log in</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.uFormGroup}>
-            <Text style={styles.forgotPassword}>Forgot password?</Text>
-          </View>
-        </View>
+        )}
       </View>
     </View>
   );
 }
 
 const styles = {
+  account:{
+    backgroundColor:  '#FFE4E1',
+    height: 700
+  },
   loginBox: {
     margin: 20,
     padding: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'white',
     borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 5,
   },
   lbHeader: {
@@ -91,10 +125,22 @@ const styles = {
   },
   linkText: {
     fontSize: 18,
-    color: 'blue',
-    textDecorationLine: 'underline',
   },
   emailLogin: {},
+  loggedInContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  loggedInText: {
+    fontSize: 20,
+  },
+  logoutButton: {
+    backgroundColor: 'lightpink',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 10,
+  },
   uFormGroup: {
     marginBottom: 15,
   },
@@ -105,7 +151,7 @@ const styles = {
     borderRadius: 5,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: 'lightpink',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -113,7 +159,6 @@ const styles = {
   buttonText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
   },
   forgotPassword: {
     textAlign: 'center',
@@ -123,4 +168,3 @@ const styles = {
 };
 
 export default AccountScreen;
-

@@ -31,13 +31,13 @@ const BrandScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor:'#FFE4E1' }}>
       <TextInput
-        style={{ padding: 10, marginHorizontal: 20 }}
+        style={{ padding: 10, marginHorizontal: 20, borderRadius: 15, backgroundColor:'white', width:460}}
         placeholder="Nhập tên thương hiệu ..."
         value={searchText}
         onChangeText={(text) => handleSearch(text)}
-        onClear={resetBrands} // Reset danh sách khi xóa văn bản tìm kiếm
+        onClear={resetBrands} 
       />
 
       <FlatList
