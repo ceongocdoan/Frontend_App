@@ -1,34 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, ScrollView, Text, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
+import { View, Button ,ScrollView, Text, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import MyDatePicker from './MyDatePicker';
+import axios from 'axios';  // Thêm import axios
 
 const BACKGROUND_COLOR = '#FFE4E1';
 
 const BookingScreen = ({ navigation }) => {
-  const [selectedCity, setSelectedCity] = useState('Hà Nội');
+  const [selectedCity, setSelectedCity] = useState('Ha Noi');
   const [selectedBrand, setSelectedBrand] = useState(null);
-  const [selectedTime, setSelectedTime] = useState('10:30');
+  const [selectedTime, setSelectedTime] = useState(new Date());
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showRestaurantList, setShowRestaurantList] = useState(false);
+  const [cities, setCities] = useState([]);
+  const [brands, setBrands] = useState([]);
   const cityIcon = <FontAwesome name="map-marker" size={24} color="black" />
   const brandIcon = <MaterialIcons name="branding-watermark" size={24} color="black" />
   const timeIcon = <MaterialIcons name="access-time" size={24} color="black" />
-
-  const cities = [
-    { label: ' Hà Nội', value: 'Hà Nội' },
-    { label: 'Hồ Chí Minh', value: 'Hồ Chí Minh' },
-    { label: 'Đà Nẵng', value: 'Đà Nẵng' }
-  ];
-
-  const brands = [
-    { name: 'Gogi House - Quán thịt nướng Hàn Quốc' },
-    { name: 'GoGi Steak' },
-    { name: 'Kichi-Kichi - Lẩu băng chuyền'}
-  ];
-
   const times = [
     '9:00', '9:30','10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30',
     '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
@@ -36,19 +27,32 @@ const BookingScreen = ({ navigation }) => {
   ];
 
   useEffect(() => {
-    if (selectedBrand && selectedTime) {
-      setLoading(true);
-      fetchRestaurants(selectedCity, selectedBrand, selectedTime)
-        .then((data) => {
-          setRestaurants(data); 
-          setLoading(false); 
-        })
-        .catch((error) => {
-          console.error('Error fetching restaurants:', error);
-          setLoading(false); 
-        });
+    fetchCities();
+  }, []);
+
+  const fetchCities = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/api/v1/restaurants/list-province');
+      setCities(response.data.map(city => ({ label: city, value: city }))); 
+    } catch (error) {
+      console.error('Error fetching cities:', error);
     }
-  }, [selectedBrand, selectedTime]);
+  };
+
+  const fetchBrands = async (province) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/api/v1/restaurants/list-brand?province=${encodeURIComponent(province)}`);
+      setBrands(response.data.map(brands => ({ label: brands, value: brands })));
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedCity) {
+      fetchBrands(selectedCity);
+    }
+  }, [selectedCity]);
 
   const fetchRestaurants = async (city, brand, time) => {
     try {
@@ -75,7 +79,6 @@ const BookingScreen = ({ navigation }) => {
       throw new Error('Error fetching restaurants:', error);
     }
   };
-  
 
   const handleCitySelect = (city) => {
     setSelectedCity(city);
@@ -88,44 +91,49 @@ const BookingScreen = ({ navigation }) => {
 
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
-    setShowRestaurantList(true);
+    setShowTimePicker(false);
   };
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: BACKGROUND_COLOR }]}>
       <Picker
-        selectedValue={selectedCity}
-        onValueChange={handleCitySelect}
-        style={styles.picker}
-      >
-        {cities.map((city, index) => (
-          <Picker.Item label={city.label} value={city.value} key={index} />
-        ))}
-      </Picker>
+  selectedValue={selectedCity}
+  onValueChange={handleCitySelect}
+  style={styles.picker}
+>
+  {cities.map((city, index) => (
+    <Picker.Item label={city.label} value={city.value} key={index} />
+  ))}
+</Picker>
 
-      <Picker
-        selectedValue={selectedBrand}
-        onValueChange={handleBrandSelect}
-        style={styles.picker}
-      >
-        <Picker.Item label="Chọn thương hiệu" value={null} />
-        {brands.map((brand, index) => (
-          <Picker.Item label={brand.name} value={brand.name} key={index} />
-        ))}
-      </Picker>
+<Picker
+  selectedValue={selectedBrand || ''}
+  onValueChange={handleBrandSelect}
+  style={styles.picker}
+>
+  <Picker.Item label="Chọn thương hiệu" value="" />
+  {brands.map((brand, index) => (
+    <Picker.Item label={brand.label} value={brand.value} key={index} />
+  ))}
+</Picker>
 
-      {showTimePicker && (
-        <Picker
-          selectedValue={selectedTime}
-          onValueChange={handleTimeSelect}
-          style={styles.picker}
-        >
-          <Picker.Item label="Chọn thời gian" value={null} />
-          {times.map((time, index) => (
-            <Picker.Item label={time} value={time} key={index} />
-          ))}
-        </Picker>
-      )}
+<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Booking Screen</Text>
+      <MyDatePicker />
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
+      />
+    </View>
+
+{showTimePicker && (
+  <DateTimePicker
+  onChange={handleTimeSelect}
+  value={selectedTime}
+  format="yyyy-MM-dd HH:mm:ss"
+/>
+)}
+<button onClick={() => setShowTimePicker(true)}>Chọn thời gian</button>
 
       {loading ? (
         <Text>Loading...</Text>

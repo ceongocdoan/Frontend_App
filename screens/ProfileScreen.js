@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Text, ActivityIndicator, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 const ProfileScreen = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -17,9 +17,9 @@ const ProfileScreen = () => {
       try {
         const storedToken = await AsyncStorage.getItem('token');
         const storedEmail = await AsyncStorage.getItem('user_email');
-        if (storedToken ===undefined ||storedEmail===null){
-          console.log('')
+        if (!storedToken || !storedEmail) {
           navigation.navigate('Account');
+          return;
         }
         setToken(storedToken);
         setEmail(storedEmail);
@@ -31,30 +31,59 @@ const ProfileScreen = () => {
     getTokenAndEmail();
   }, []);
 
-  useEffect(() => {
-    if (token) {
+  useFocusEffect(
+    useCallback(() => {
       const fetchUserInfo = async () => {
-        try {
-          const response = await axios.get('http://localhost:8080/api/v1/' + 'session', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          if (response.data && response.data.length > 0) {
-            setUserInfo(response.data[0]);
-          } else {
+        if (token) {
+          try {
+            const response = await axios.get('http://localhost:8080/api/v1/session', {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            if (response.data && response.data.length > 0) {
+              setUserInfo(response.data[0]);
+            } else {
+              navigation.navigate("Account");
+            }
+          } catch (err) {
             navigation.navigate("Account");
+          } finally {
+            setLoading(false);
           }
-        } catch (err) {
-          navigation.navigate("Account");
-        } finally {
+        } else {
           setLoading(false);
         }
       };
 
       fetchUserInfo();
+    }, [token])
+  );
+
+  const handleLogout = async () => {
+    try {
+      if (!token) {
+        navigation.navigate('Account');
+        return;
+      }
+      await axios.post('http://localhost:8080/api/v1/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      await AsyncStorage.removeItem('user_email');
+      await AsyncStorage.removeItem('token');
+
+      Alert.alert('Logout successfully');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+    } catch (error) {
+      Alert.alert("Logout failed. Please try again.");
     }
-  }, [token]);
+  };
 
   if (loading) {
     return (
@@ -82,6 +111,11 @@ const ProfileScreen = () => {
           <Text>Email: {userInfo.email}</Text>
         </View>
       )}
+      <View style={styles.uFormGroup}>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
+          <Text style={styles.buttonText}>Log out</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -100,6 +134,20 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 20,
     marginBottom: 20,
+  },
+  uFormGroup: {
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
