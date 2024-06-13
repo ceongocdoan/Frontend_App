@@ -9,15 +9,13 @@ const Call = () => {
 
   const handlePhoneNumberChange = (number) => {
     setPhoneNumber(number);
-    setIsPhoneNumberValid(number.length === 10); // Giả sử độ dài số điện thoại là 10 chữ số
+    setIsPhoneNumberValid(number.length === 10); 
   };
 
   const handleContinuePress = () => {
     if (isPhoneNumberValid) {
-      // Xử lý khi số điện thoại hợp lệ
       console.log('Số điện thoại hợp lệ:', phoneNumber);
     } else {
-      // Xử lý khi số điện thoại không hợp lệ
       console.log('Số điện thoại không hợp lệ:', phoneNumber);
     }
   };

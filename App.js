@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,9 +11,8 @@ import BookingInfoScreen from './screens/BookingInfoScreen';
 import Finding from './screens/Finding';
 import Shopping from './screens/Shopping';
 import Call from './screens/Call';
-import RegisterScreen from './screens/RegisterScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons'; 
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -27,70 +25,51 @@ const HomeStack = () => (
     <Stack.Screen name="Finding" component={Finding} options={{ headerShown: true, headerBackTitleVisible: false, headerBackTitle: 'Back' }} />
     <Stack.Screen name="Call" component={Call} options={{ headerShown: true, headerBackTitleVisible: false, headerBackTitle: 'Back' }} />
     <Stack.Screen name="Shopping" component={Shopping} options={{ headerShown: true, headerBackTitleVisible: false, headerBackTitle: 'Back' }} />
-    <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: true }} /> 
     <Stack.Screen name="Profile" component={ProfileScreen} options={{ heheaderShown: true }} /> 
     <Stack.Screen name="Account" component={AccountScreen} options={{ heheaderShown: true }} /> 
   </Stack.Navigator>
+
 );
 
 const App = () => {
-  const [isRegistered, setIsRegistered] = useState(null);
-
-  useEffect(() => {
-    const checkRegistration = async () => {
-      const storedEmail = await AsyncStorage.getItem('user_email');
-      setIsRegistered(!!storedEmail); 
-    };
-
-    checkRegistration();
-  }, []);
-
-  if (isRegistered === null) {
-    return null; 
-  }
 
   return (
     <NavigationContainer>
-      {isRegistered ? (
         <BottomTab.Navigator>
           <BottomTab.Screen
-            name="Home"
+            name="Trang chủ"
             component={HomeStack}
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
-                <Ionicons name="home" size={size} color={'green'} />
+                <Ionicons name="home" size={size} color={'pink'} />
               ),
             }}
           />
           <BottomTab.Screen
-            name="Brand"
+            name="Thương hiệu"
             component={BrandScreen}
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
-                <Ionicons name="restaurant" size={size} color={'green'} />
+                <MaterialCommunityIcons name="form-select" size={size} color={'pink'} />
               ),
             }}
           />
           <BottomTab.Screen
-            name="Profile"
-            component={ProfileScreen}
+            name="Tài khoản"
+            component={AccountScreen}
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
-                <Ionicons name="person" size={size} color={'green'} />
+                <Ionicons name="person" size={size} color={'pink'} />
               ),
             }}
           />
         </BottomTab.Navigator>
-      ) : (
-        <RegisterScreen />
-      )}
     </NavigationContainer>
   );
 };
 
 export default App;
-
 
