@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { createIconSet } from 'react-native-vector-icons';   
+// import { View } from 'react-native-web';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
