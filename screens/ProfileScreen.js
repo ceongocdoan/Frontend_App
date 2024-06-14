@@ -88,7 +88,7 @@ const ProfileScreen = () => {
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#FF69B4" />
       </View>
     );
   }
@@ -105,10 +105,10 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <Text style={styles.greeting}>Hello, {email}!</Text>
       {userInfo && (
-        <View>
-          <Text>Name: {userInfo.name}</Text>
-          <Text>Phone: {userInfo.phone}</Text>
-          <Text>Email: {userInfo.email}</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoText}>Name: {userInfo.name}</Text>
+          <Text style={styles.infoText}>Phone: {userInfo.phone}</Text>
+          <Text style={styles.infoText}>Email: {userInfo.email}</Text>
         </View>
       )}
       <View style={styles.uFormGroup}>
@@ -125,31 +125,56 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#FFE4E1', // Light Pink background color
   },
   centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFE4E1', // Light Pink background color
   },
   greeting: {
-    fontSize: 20,
+    fontSize: 24,
     marginBottom: 20,
+    color: '#FF69B4', 
+    fontWeight: 'bold',
+  },
+  infoContainer: {
+    marginBottom: 20,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#FFF', 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  infoText: {
+    fontSize: 18,
+    color: '#333', 
+    marginBottom: 5,
   },
   uFormGroup: {
     marginBottom: 15,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FF69B4', 
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
   },
   buttonText: {
-    color: 'white',
+    color: '#FFF', 
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
 
 export default ProfileScreen;
-
