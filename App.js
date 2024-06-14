@@ -32,6 +32,20 @@ const HomeStack = () => (
 );
 
 const App = () => {
+  const [isRegistered, setIsRegistered] = useState(null);
+  console.log(process.env.BACKEND_HOST)
+  useEffect(() => {
+    const checkRegistration = async () => {
+      const storedEmail = await AsyncStorage.getItem('user_email');
+      setIsRegistered(!!storedEmail); 
+    };
+
+    checkRegistration();
+  }, []);
+
+  if (isRegistered === null) {
+    return null; 
+  }
 
   return (
     <NavigationContainer>

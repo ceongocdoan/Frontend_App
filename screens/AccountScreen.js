@@ -1,61 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, Pressable } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
-function AccountScreen() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false); 
-
-  useEffect(() => {
-    checkLoggedIn();
-  }, []);
-
-  const checkLoggedIn = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
-    if (userToken) {
-      setLoggedIn(true);
-      const storedEmail = await AsyncStorage.getItem('userEmail');
-      setEmail(storedEmail);
-    }
-  };
+const AccountScreen = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation();
 
   const handleLogin = async () => {
+    if (email.trim() === "" || password.trim() === ""){
+      Alert.alert("Please enter email and password.");
+      return;
+    }
+    
     try {
-      const response = await fetch('http://localhost:3002/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name: 'Default User', email }),
+      const response = await axios.post('http://localhost:8080/api/v1/'+`login`, {
+        email: email,
+        password: password
       });
 
-      const data = await response.json();
+      await AsyncStorage.setItem('user_email', email);
+      await AsyncStorage.setItem('token', response.data.token);
 
-      if (response.status === 200) {
-        await AsyncStorage.setItem('userToken', data.token);
-        await AsyncStorage.setItem('userEmail', email);
-        setLoggedIn(true); 
-        Alert.alert("Login successful!");
-      } else {
-        Alert.alert("Invalid email or password!");
-      }
-    } catch (error) {
-      console.error('Error logging in:', error);
-      Alert.alert("An error occurred. Please try again.");
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('userToken');
-      await AsyncStorage.removeItem('userEmail');
-      setLoggedIn(false); 
+      Alert.alert(`Login with Email: ${email}`);
+  
       setEmail("");
-      Alert.alert("Logged out successfully!");
+      setPassword("");
+  
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
     } catch (error) {
-      console.error('Error logging out:', error);
-      Alert.alert("An error occurred. Please try again.");
+      Alert.alert("Login failed. Please try again.");
     }
   };
 
