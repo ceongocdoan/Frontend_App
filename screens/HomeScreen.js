@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, FlatList, Animated, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, Animated } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Text} from 'react-native';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [userEmail, setUserEmail] = useState('');
   const scrollX = new Animated.Value(0);
   const [imageScale, setImageScale] = useState({});
   const [buttonBackgroundColor, setButtonBackgroundColor] = useState({});
@@ -23,7 +20,7 @@ const HomeScreen = () => {
   const offerImages = [
     { src: require('../assets/res1.jpg'), text: 'Tặng 1000 suất free mừng nhà hàng mới' },
     { src: require('../assets/res2.jpg'), text: 'Giảm 40% khi đặt chỗ vào buổi trưa' },
-    { src: require('../assets/res3.jpg'), text: 'Kichi kichi tặng buffet  0 đồng' },
+    { src: require('../assets/res3.jpg'), text: 'Kichi kichi tặng buffet 0 đồng' },
     { src: require('../assets/res4.jpg'), text: 'Đi càng đông giảm giá càng nhiều' },
     { src: require('../assets/res5.jpg'), text: 'Cuốn cả Hà Nội với voucher 200k!' },
   ];
@@ -34,29 +31,6 @@ const HomeScreen = () => {
     { image: require('../assets/h3.jpg'), text: 'Mua 1 tặng 1 cho mọi thực đơn tại nhà hàng ' },
     { image: require('../assets/h4.jpg'), text: 'Buffet chỉ 199k/người thanh toán qua VP' },
   ];
-
-  useEffect(() => {
-      const fetchUserEmail = async () => {
-        const email = await AsyncStorage.getItem('userEmail');
-        setUserEmail(email);
-      };
-      fetchUserEmail();
-
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.timing(scrollX, {
-        toValue: 1,
-        duration: 5000,
-        useNativeDriver: true,
-      })
-    ).start();
-  }, [scrollX]);
 
   const renderImage = ({ item, index }) => {
     const inputRange = [(index - 1) * 300, index * 300, (index + 1) * 300];
@@ -75,7 +49,7 @@ const HomeScreen = () => {
     };
 
     return (
-      <Pressable
+      <TouchableOpacity
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={1}
@@ -84,7 +58,7 @@ const HomeScreen = () => {
         <Animated.View style={{ opacity }}>
           <Image source={item} style={styles.image} resizeMode="cover" />
         </Animated.View>
-      </Pressable>
+      </TouchableOpacity>
     );
   };
 
@@ -93,52 +67,57 @@ const HomeScreen = () => {
   };
 
   const renderOfferImage = ({ item }) => (
-    <Pressable onPress={() => handleOfferPress(item)}>
+    <TouchableOpacity onPress={() => handleOfferPress(item)}>
       <View style={styles.offerItem}>
         <Image source={item.src} style={styles.offerImage} />
-        {item.text ? <Text style={styles.offerText}>{item.text}</Text> : null}
+        <View style={styles.offerTextContainer}>
+          {item.text ? <Text style={styles.offerText}>{item.text}</Text> : null}
+          <TouchableOpacity style={styles.offerSquareButton} onPress={() => handleOfferPress(item)}>
+            <Text style={styles.offerSquareButtonText}>Xem</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </Pressable>
+    </TouchableOpacity>
   );
 
   const renderPartnerOffer = ({ item }) => (
     <View style={styles.partnerOfferItem}>
       <Image source={item.image} style={styles.partnerOfferImage} />
-      <Text style={styles.partnerOfferText}>{item.text}</Text>
+      <View style={styles.partnerOfferTextContainer}>
+        <Text style={styles.partnerOfferText}>{item.text}</Text>
+        <TouchableOpacity style={styles.partnerOfferSquareButton} onPress={() => handleOfferPress(item)}>
+          <Text style={styles.offerSquareButtonText}>Xem</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
   const handlePressIn = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#CC99CC' });
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FF69B4' }); // Hot Pink
   };
-
+  
   const handlePressOut = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#F0E68C' });
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFE4E1' }); // Misty Rose
   };
-
+  
   const handleHoverIn = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#DDA0DD' });
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFB6C1' }); // Peach Puff
   };
-
+  
   const handleHoverOut = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#F0E68C' });
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFE4E1' }); // Misty Rose
   };
 
-
-  const BookingIcon = <Icon name="calendar" size={14} color="white" />;
-  const RestaurantIcon = <FontAwesome5 name="map-marker-alt" size={14} color="white" />;
-  const CallFoodIcon = <Icon name="phone" size={14} color="white" />;
-  const MarketIcon = <Icon name="shopping-cart" size={14} color="white" />;
+  const BookingIcon = <Icon name="calendar" size={24} color="green" />;
+  const RestaurantIcon = <FontAwesome5 name="map-marker-alt" size={24} color="green" />;
+  const CallFoodIcon = <Icon name="phone" size={24} color="green" />;
+  const MarketIcon = <Icon name="shopping-cart" size={24} color="green" />;
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Xin chào, {userEmail}</Text>
-      </View>
-
       <View style={styles.buttonContainer}>
-        <Pressable
-          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.booking || '#F0E68C' }]}
+        <TouchableOpacity
+          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.booking || '#FFE4E1' }]}
           onPress={() => navigation.navigate('Booking')}
           onPressIn={() => handlePressIn('booking')}
           onPressOut={() => handlePressOut('booking')}
@@ -146,9 +125,9 @@ const HomeScreen = () => {
           onMouseLeave={() => handleHoverOut('booking')}
         >
           <Text style={styles.iconText}>{BookingIcon} Đặt Bàn</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.finding || '#F0E68C' }]}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.finding || '#FFE4E1' }]}
           onPress={() => navigation.navigate('Finding')}
           onPressIn={() => handlePressIn('finding')}
           onPressOut={() => handlePressOut('finding')}
@@ -156,9 +135,9 @@ const HomeScreen = () => {
           onMouseLeave={() => handleHoverOut('finding')}
         >
           <Text style={styles.iconText}>{RestaurantIcon} Tìm Nhà Hàng</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.call || '#F0E68C' }]}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.call || '#FFE4E1' }]}
           onPress={() => navigation.navigate('Call')}
           onPressIn={() => handlePressIn('call')}
           onPressOut={() => handlePressOut('call')}
@@ -166,9 +145,9 @@ const HomeScreen = () => {
           onMouseLeave={() => handleHoverOut('call')}
         >
           <Text style={styles.iconText}>{CallFoodIcon} Gọi Đồ Ăn</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.shopping || '#F0E68C' }]}
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.iconButton, { backgroundColor: buttonBackgroundColor.shopping || '#FFE4E1' }]}
           onPress={() => navigation.navigate('Shopping')}
           onPressIn={() => handlePressIn('shopping')}
           onPressOut={() => handlePressOut('shopping')}
@@ -176,7 +155,7 @@ const HomeScreen = () => {
           onMouseLeave={() => handleHoverOut('shopping')}
         >
           <Text style={styles.iconText}>{MarketIcon} Đi Chợ</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.carouselContainer}>
@@ -230,13 +209,10 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFE4E1',
-  },offersContainer1: {
+  offersContainer1: {
     padding: 20,
-    backgroundColor: 'lightpink',
-    borderRadius: 50
+    backgroundColor: '#FFE4E1', // Light Pink
+    borderRadius: 50,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -265,6 +241,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000033',
+    fontFamily: 'Roboto', // Thêm dòng này
   },
   carouselContainer: {
     height: 200,
@@ -300,26 +277,47 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     color: 'black',
+    fontFamily: 'Roboto', // Thêm dòng này
   },
   offerList: {
     alignItems: 'center',
   },
   offerItem: {
     alignItems: 'center',
-    marginHorizontal: 10, 
+    marginHorizontal: 10,
   },
   offerImage: {
-    width: 150,
+    width: 200,
     height: 150,
     borderRadius: 10,
   },
-  offerText: {
+  offerTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 5,
+  },
+  offerText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: 'black',
-    width: 150, 
-    textAlign: 'center', 
+    width: 150,
+    textAlign: 'center',
+    fontFamily: 'Roboto', // Thêm dòng này
+  },
+  offerSquareButton: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#FFB6C1', // Light Pink
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
+    borderRadius: 6,
+  },
+  offerSquareButtonText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'black',
+    fontFamily: 'Roboto', // Thêm dòng này
   },
   partnerOffersContainer: {
     paddingHorizontal: 20,
@@ -330,22 +328,35 @@ const styles = StyleSheet.create({
   },
   partnerOfferItem: {
     alignItems: 'center',
-    marginHorizontal: 10, 
+    marginHorizontal: 10,
   },
   partnerOfferImage: {
     width: 150,
     height: 150,
     borderRadius: 10,
   },
-  partnerOfferText: {
+  partnerOfferTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 5,
+  },
+  partnerOfferText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: 'black',
-    width: 150, 
-    textAlign: 'center', 
+    width: 150,
+    textAlign: 'center',
+    fontFamily: 'Roboto', // Thêm dòng này
+  },
+  partnerOfferSquareButton: {
+    width: 30,
+    height: 30,
+    backgroundColor: 'lightpink', // Light Pink
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
+    borderRadius: 6,
   },
 });
-
 
 export default HomeScreen;

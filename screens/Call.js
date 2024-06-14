@@ -22,7 +22,7 @@ const Call = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: BACKGROUND_COLOR }]}>
-      <Text style={styles.header}>App đặt hàng vui vẻ xin chào!</Text>
+      <Text style={styles.header}>TableNow xin chào!</Text>
       <Text style={styles.subHeader}>Đăng nhập/ Đăng kí tài khoản ngay bây giờ</Text>
       <View style={[styles.inputContainer, { borderColor: isPhoneNumberValid ? 'green' : 'red' }]}>
         <TextInput
