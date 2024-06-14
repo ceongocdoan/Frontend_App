@@ -63,6 +63,7 @@ const HomeScreen = () => {
   };
 
   const handleOfferPress = (item) => {
+    // Xử lý sự kiện nhấn vào ảnh ưu đãi ở đây
     alert(item.text);
   };
 
@@ -204,6 +205,18 @@ const HomeScreen = () => {
           />
         </View>
       </View>
+
+      <View style={styles.partnerOffersContainer}>
+        <Text style={styles.header}>Ưu Đãi Đối Tác</Text>
+        <FlatList
+          data={PartnerOffers}
+          renderItem={renderPartnerOffer}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.partnerOfferList}
+        />
+      </View>
     </ScrollView>
   );
 };
@@ -318,6 +331,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     fontFamily: 'Roboto', // Thêm dòng này
+    width: 150, // Đảm bảo chiều dài bằng với ảnh
+    textAlign: 'center', // Canh giữa văn bản
   },
   partnerOffersContainer: {
     paddingHorizontal: 20,
@@ -356,6 +371,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 5,
     borderRadius: 6,
+    textAlign: 'center', // Canh giữa văn bản
   },
 });
 

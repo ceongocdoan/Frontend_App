@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,10 +8,12 @@ import ProfileScreen from './screens/ProfileScreen';
 import BrandScreen from './screens/BrandScreen';
 import BookingScreen from './screens/BookingScreen';
 import BookingInfoScreen from './screens/BookingInfoScreen';
+import RegisterScreen from './screens/RegisterScreen';
 import Finding from './screens/Finding';
 import Shopping from './screens/Shopping';
 import Call from './screens/Call';
 import { Ionicons } from '@expo/vector-icons'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const BottomTab = createBottomTabNavigator();
@@ -27,6 +29,7 @@ const HomeStack = () => (
     <Stack.Screen name="Shopping" component={Shopping} options={{ headerShown: true, headerBackTitleVisible: false, headerBackTitle: 'Back' }} />
     <Stack.Screen name="Profile" component={ProfileScreen} options={{ heheaderShown: true }} /> 
     <Stack.Screen name="Account" component={AccountScreen} options={{ heheaderShown: true }} /> 
+    <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: true }} /> 
   </Stack.Navigator>
 
 );
@@ -72,7 +75,7 @@ const App = () => {
           />
           <BottomTab.Screen
             name="Tài khoản"
-            component={AccountScreen}
+            component={ProfileScreen}
             options={{
               headerShown: false,
               tabBarIcon: ({ color, size }) => (

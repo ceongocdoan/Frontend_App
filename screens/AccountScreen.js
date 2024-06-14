@@ -38,63 +38,65 @@ const AccountScreen = () => {
     }
   };
 
+  const navigateToRegister = () => {
+    navigation.navigate("Register");
+  };
 
   return (
-    <View style={styles.account}>
+    <View>
       <View style={styles.loginBox}>
         <View style={styles.lbHeader}>
-          <Text style={styles.linkText}>Đăng nhập tài khoản</Text>
+          <Text style={styles.linkText}>LOGIN</Text>
+          <TouchableOpacity onPress={navigateToRegister}>
+            <Text style={styles.linkText}>SIGN UP</Text>
+          </TouchableOpacity>
         </View>
 
-        {loggedIn ? ( 
-          <View style={styles.loggedInContainer}>
-            <Text style={styles.loggedInText}>Xin chào, {email}!</Text>
-            <Pressable style={styles.logoutButton} onPress={handleLogout}>
-              <Text style={styles.buttonText}>Đăng xuất khỏi tài khoản này</Text>
-            </Pressable>
+        <View style={styles.emailLogin}>
+          <View style={styles.uFormGroup}>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+            />
           </View>
-        ) : (
-          <View style={styles.emailLogin}>
-            <View style={styles.uFormGroup}>
-              <TextInput
-                style={styles.input}
-                placeholder="Tên..."
-                value={name}
-                onChangeText={(text) => setName(text)}
-              />
-            </View>
-
-            <View style={styles.uFormGroup}>
-              <TextInput
-                style={styles.input}
-                placeholder="Email..."
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-              />
-            </View>
-
-            <View style={styles.uFormGroup}>
-              <Pressable style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Đăng nhập</Text>
-              </Pressable>
-            </View>
+          <View style={styles.uFormGroup}>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+            />
           </View>
-        )}
+          <View style={styles.uFormGroup}>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              <Text style={styles.buttonText}>Log in</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.uFormGroup}>
+            <Text style={styles.forgotPassword}>Forgot password?</Text>
+          </View>
+        </View>
       </View>
     </View>
   );
 }
 
 const styles = {
-  account:{
-    backgroundColor:  '#FFE4E1',
-    height: 700
-  },
   loginBox: {
     margin: 20,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
     elevation: 5,
   },
   lbHeader: {
@@ -104,22 +106,10 @@ const styles = {
   },
   linkText: {
     fontSize: 18,
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
   emailLogin: {},
-  loggedInContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  loggedInText: {
-    fontSize: 20,
-  },
-  logoutButton: {
-    backgroundColor: 'lightpink',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
-  },
   uFormGroup: {
     marginBottom: 15,
   },
@@ -130,7 +120,7 @@ const styles = {
     borderRadius: 5,
   },
   button: {
-    backgroundColor: 'lightpink',
+    backgroundColor: 'blue',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -138,6 +128,7 @@ const styles = {
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   forgotPassword: {
     textAlign: 'center',
