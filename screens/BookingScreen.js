@@ -140,9 +140,9 @@ const BookingScreen = ({ navigation }) => {
               />
             }
           />
-          <Text
-            style={{ background: "white"}}
-          >Selected Date: {date.toLocaleString()}</Text>
+          <Text style={{ background: "white" }}>
+            Selected Date: {date.toLocaleString()}
+          </Text>
         </View>
       )}
 
@@ -157,9 +157,11 @@ const BookingScreen = ({ navigation }) => {
                 key={index}
                 onPress={() =>
                   navigation.navigate("BookingInfo", {
-                    restaurantId: restaurant.id,
+                    restaurantId: restaurant._id,
                     restaurantName: restaurant.name,
                     restaurantImage: restaurant.image,
+                    restaurantAddress: restaurant.location.street+", "+restaurant.location.district+", "+restaurant.location.province,
+                    date: date,
                   })
                 }
                 style={styles.restaurantItem}
@@ -171,7 +173,7 @@ const BookingScreen = ({ navigation }) => {
                 <View style={styles.restaurantInfo}>
                   <Text style={styles.restaurantName}>{restaurant.name}</Text>
                   <Text style={styles.restaurantAddress}>
-                    {restaurant.address}
+                    {restaurant.location.street+", "+restaurant.location.district+", "+restaurant.location.province}
                   </Text>
                   <Text style={styles.restaurantPhone}>{restaurant.phone}</Text>
                   <Text style={styles.restaurantRating}>
@@ -196,7 +198,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     borderWidth: 5,
-    borderColor: '#FFB6C1',
+    borderColor: "#FFB6C1",
     marginBottom: 10,
   },
   listHeader: {
@@ -211,7 +213,7 @@ const styles = StyleSheet.create({
   restaurantItem: {
     flexDirection: "row",
     borderWidth: 1,
-    borderColor: '#FFB6C1',
+    borderColor: "#FFB6C1",
     padding: 10,
     marginVertical: 10,
   },
