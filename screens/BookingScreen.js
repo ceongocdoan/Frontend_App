@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 50,
     borderWidth: 5,
-    borderColor: '#CC99FF',
+    borderColor: '#FFB6C1',
     marginBottom: 10,
   },
   listHeader: {
@@ -183,9 +183,9 @@ const styles = StyleSheet.create({
   restaurantItem: {
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#CC99FF',
+    borderColor: '#FFB6C1',
     padding: 10,
-    marginVertical: 5,
+    marginVertical: 10,
   },
   restaurantImage: {
     width: 100,

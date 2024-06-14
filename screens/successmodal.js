@@ -24,14 +24,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    backgroundColor: '#FFB6C1', 
   },
   modalView: {
-    backgroundColor: 'white',
+    backgroundColor: '#FFE4E1',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#FFB6C1',
     shadowOffset: {
       width: 0,
       height: 2,
