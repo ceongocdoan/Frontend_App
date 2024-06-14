@@ -63,7 +63,7 @@ const HomeScreen = () => {
   };
 
   const handleOfferPress = (item) => {
-    // Xử lý sự kiện nhấn vào ảnh ưu đãi ở đây
+   
     alert(item.text);
   };
 
@@ -94,19 +94,19 @@ const HomeScreen = () => {
   );
 
   const handlePressIn = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FF69B4' }); // Hot Pink
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FF69B4' }); 
   };
   
   const handlePressOut = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFE4E1' }); // Misty Rose
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFE4E1' }); 
   };
   
   const handleHoverIn = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFB6C1' }); // Peach Puff
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFB6C1' }); 
   };
   
   const handleHoverOut = (key) => {
-    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFE4E1' }); // Misty Rose
+    setButtonBackgroundColor({ ...buttonBackgroundColor, [key]: '#FFE4E1' }); 
   };
 
   const BookingIcon = <Icon name="calendar" size={24} color="green" />;
@@ -224,7 +224,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   offersContainer1: {
     padding: 20,
-    backgroundColor: '#FFE4E1', // Light Pink
+    backgroundColor: '#FFE4E1', 
     borderRadius: 50,
   },
   buttonContainer: {
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000033',
-    fontFamily: 'Roboto', // Thêm dòng này
+    fontFamily: 'Roboto', 
   },
   carouselContainer: {
     height: 200,
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     color: 'black',
-    fontFamily: 'Roboto', // Thêm dòng này
+    fontFamily: 'Roboto', 
   },
   offerList: {
     alignItems: 'center',
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     color: 'black',
     width: 150,
     textAlign: 'center',
-    fontFamily: 'Roboto', // Thêm dòng này
+    fontFamily: 'Roboto', 
   },
   offerSquareButton: {
     width: 30,

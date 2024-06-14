@@ -105,10 +105,19 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       <Text style={styles.greeting}>Hello, {email}!</Text>
       {userInfo && (
-        <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Name: {userInfo.name}</Text>
-          <Text style={styles.infoText}>Phone: {userInfo.phone}</Text>
-          <Text style={styles.infoText}>Email: {userInfo.email}</Text>
+        <View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoLabel}>Name:</Text>
+            <Text style={styles.infoText}>{userInfo.name}</Text>
+          </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoLabel}>Phone:</Text>
+            <Text style={styles.infoText}>{userInfo.phone}</Text>
+          </View>
+          <View style={styles.infoBox}>
+            <Text style={styles.infoLabel}>Email:</Text>
+            <Text style={styles.infoText}>{userInfo.email}</Text>
+          </View>
         </View>
       )}
       <View style={styles.uFormGroup}>
@@ -137,30 +146,36 @@ const styles = StyleSheet.create({
   greeting: {
     fontSize: 24,
     marginBottom: 20,
-    color: '#FF69B4', 
+    color: '#FF69B4', // Hot Pink text color
     fontWeight: 'bold',
   },
-  infoContainer: {
-    marginBottom: 20,
+  infoBox: {
+    marginBottom: 10,
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#FFF', 
+    backgroundColor: '#FFF', // White background color for info box
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
+    width: '100%',
+  },
+  infoLabel: {
+    fontSize: 16,
+    color: '#333', // Dark text color for label
+    fontWeight: 'bold',
   },
   infoText: {
     fontSize: 18,
-    color: '#333', 
-    marginBottom: 5,
+    color: '#333', // Dark text color for text
+    marginTop: 5,
   },
   uFormGroup: {
-    marginBottom: 15,
+    marginTop: 20,
   },
   button: {
-    backgroundColor: '#FF69B4', 
+    backgroundColor: '#FF69B4', // Hot Pink button color
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -171,7 +186,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   buttonText: {
-    color: '#FFF', 
+    color: '#FFF', // White text color
     fontSize: 16,
     fontWeight: 'bold',
   },

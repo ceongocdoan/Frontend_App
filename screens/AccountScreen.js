@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -10,13 +10,13 @@ const AccountScreen = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    if (email.trim() === "" || password.trim() === ""){
+    if (email.trim() === "" || password.trim() === "") {
       Alert.alert("Please enter email and password.");
       return;
     }
-    
+
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/'+`login`, {
+      const response = await axios.post('http://localhost:8080/api/v1/login', {
         email: email,
         password: password
       });
@@ -25,10 +25,10 @@ const AccountScreen = () => {
       await AsyncStorage.setItem('token', response.data.token);
 
       Alert.alert(`Login with Email: ${email}`);
-  
+
       setEmail("");
       setPassword("");
-  
+
       navigation.reset({
         index: 0,
         routes: [{ name: 'Home' }],
@@ -43,10 +43,10 @@ const AccountScreen = () => {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.loginBox}>
         <View style={styles.lbHeader}>
-          <Text style={styles.linkText}>LOGIN</Text>
+          <Text style={styles.headerText}>LOGIN</Text>
           <TouchableOpacity onPress={navigateToRegister}>
             <Text style={styles.linkText}>SIGN UP</Text>
           </TouchableOpacity>
@@ -84,11 +84,16 @@ const AccountScreen = () => {
   );
 }
 
-const styles = {
-  loginBox: {
-    margin: 20,
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#FFE4E1', 
+  },
+  loginBox: {
+    padding: 20,
+    backgroundColor: '#FFF', 
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
@@ -104,9 +109,14 @@ const styles = {
     justifyContent: 'space-between',
     marginBottom: 20,
   },
+  headerText: {
+    fontSize: 18,
+    color: '#FFB6C1', 
+    fontWeight: 'bold',
+  },
   linkText: {
     fontSize: 18,
-    color: 'blue',
+    color: '#FFB6C1', 
     textDecorationLine: 'underline',
   },
   emailLogin: {},
@@ -115,26 +125,35 @@ const styles = {
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#FFB6C1', 
     padding: 10,
     borderRadius: 5,
+    backgroundColor: '#FFF', 
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FFB6C1', 
     padding: 15,
-    borderRadius: 5,
+    borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 3,
   },
   buttonText: {
-    color: 'white',
+    color: '#FFF', 
     fontSize: 16,
     fontWeight: 'bold',
   },
   forgotPassword: {
     textAlign: 'center',
-    color: 'blue',
+    color: '#FF69B4', 
     textDecorationLine: 'underline',
   },
-};
+});
 
 export default AccountScreen;
