@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,11 +28,7 @@ const AccountScreen = () => {
 
       setEmail("");
       setPassword("");
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'Home' }],
-      });
+      navigation.navigate('Profile');
     } catch (error) {
       Alert.alert("Login failed. Please try again.");
     }
